@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 
@@ -9,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Fetch the session
     const setData = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) throw error;
@@ -17,6 +19,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
 
+    // Unsubscribe from listener when component unmounts
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);

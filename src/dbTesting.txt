@@ -1,0 +1,126 @@
+import { signUp, login } from "./controllers/auth";
+import {
+  addItem,
+  deleteItem,
+  updateItem,
+  fetchItems,
+} from "./controllers/itemData";
+import {
+  fetchTemplatesWithExercises,
+  addTemplateExercises,
+  editTemplateExercises,
+  deleteTemplateExercises,
+} from "./controllers/templates";
+import { useAuth } from "./contexts/authContext";
+
+const dbTesting = () => {
+  const { user, signOut } = useAuth();
+  return (
+    <>
+      {user ? <h2>Welcome, {user.email}!</h2> : <h2>Welcome, Guest!</h2>}
+      <button
+        onClick={() =>
+          signUp("lorenzo.ablis123@gmail.com", "password", "enzoablis")
+        }
+      >
+        Sign Up
+      </button>
+      <button onClick={() => login("lorenzo.ablis123@gmail.com", "password")}>
+        Login
+      </button>
+      <button onClick={signOut}>Logout</button>
+      <button
+        onClick={() =>
+          addItem(
+            user.id,
+            {
+              template_id: 4,
+              exercise_id: 8,
+              sets: 3,
+              reps: 10,
+              weight: 15,
+              order_index: 2,
+              rest_time: 30,
+            },
+            "template_exercises"
+          )
+        }
+      >
+        Add
+      </button>
+      <button onClick={() => deleteItem(user.id, "curls", "exercises")}>
+        Delete
+      </button>
+      <button
+        onClick={() =>
+          updateItem(
+            user.id,
+            {
+              name: "curls",
+              muscle_group: "chest",
+              category: "bodyweight",
+            },
+            {
+              name: "flyes",
+              muscle_group: "chest",
+              category: "bodyweight",
+            },
+            "exercises"
+          )
+        }
+      >
+        Edit
+      </button>
+      <button onClick={() => fetchItems(user.id, "exercises")}>Fetch</button>
+      <button onClick={() => fetchTemplatesWithExercises(user.id)}>
+        Fetch2
+      </button>
+      <button
+        onClick={() =>
+          addTemplateExercises({
+            template_id: 4,
+            exercise_id: 7,
+            sets: 3,
+            reps: 10,
+            order_index: 2,
+            rest_time: 10,
+            weight: 35,
+          })
+        }
+      >
+        add template
+      </button>
+      <button
+        onClick={() =>
+          editTemplateExercises(
+            {
+              template_id: 4,
+              exercise_id: 7,
+              sets: 3,
+              reps: 10,
+              order_index: 2,
+              rest_time: 10,
+              weight: 35,
+            },
+            {
+              template_id: 4,
+              exercise_id: 7,
+              sets: 4,
+              reps: 12,
+              order_index: 1,
+              rest_time: 60,
+              weight: 100,
+            }
+          )
+        }
+      >
+        Edit template
+      </button>
+      <button onClick={() => deleteTemplateExercises(4, 7)}>
+        delete template
+      </button>
+    </>
+  );
+};
+
+export default dbTesting;
