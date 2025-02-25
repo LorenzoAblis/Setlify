@@ -3,6 +3,17 @@ import supabase from "../supabaseClient";
 export const signUp = async (email, password, username) => {
   try {
     // Supabase auth create user
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select()
+      .eq("email", email)
+      .single();
+
+    if (existingUser) {
+      console.error("User already exists");
+      return { success: false, message: "User already exists" };
+    }
+
     const { data, signupError } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -29,7 +40,10 @@ export const signUp = async (email, password, username) => {
     }
 
     console.log("User successfully signed up and added to the database!");
-    return data.user;
+    return {
+      success: true,
+      message: "User successfully signed up and added to the database!",
+    };
   } catch (err) {
     console.error("Error signing user up:", err);
     return { success: false, message: err };

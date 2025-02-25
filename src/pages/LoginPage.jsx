@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signUp } from "../controllers/auth";
+import { login } from "../controllers/auth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
@@ -16,22 +16,15 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "../components/ui/password-input";
 
-const SignupPage = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState({
-    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const forms = [
-    {
-      label: "Username",
-      name: "username",
-      placeholder: "Username",
-    },
     {
       label: "Email",
       name: "email",
@@ -42,20 +35,10 @@ const SignupPage = () => {
       name: "password",
       placeholder: "Password",
     },
-    {
-      label: "Confirm Password",
-      name: "confirmPassword",
-      placeholder: "Confirm Password",
-    },
   ];
 
   const validateForm = () => {
     let newErrors = {};
-
-    if (!/^[a-zA-Z0-9_]{3,20}$/.test(formValues.username)) {
-      newErrors.username =
-        "Username must be 3-20 characters long and contain only letters, numbers, and underscores.";
-    }
 
     if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
       newErrors.email = "Invalid email format.";
@@ -64,10 +47,6 @@ const SignupPage = () => {
     if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(formValues.password)) {
       newErrors.password =
         "Password must be at least 8 characters long, contain a number and an uppercase letter.";
-    }
-
-    if (formValues.password !== formValues.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
     }
 
     setErrors(newErrors);
@@ -79,21 +58,14 @@ const SignupPage = () => {
     setFormValues((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const handleSignup = async () => {
+  const handleLogin = async () => {
     if (validateForm()) {
-      const res = await signUp(
-        formValues.email,
-        formValues.password,
-        formValues.username
-      );
+      const res = await login(formValues.email, formValues.password);
       if (res.success) {
-        console.log("Signup successful");
-        toast.success("Signup successful. You can now login.");
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+        navigate("/");
+        console.log("Login successful");
       } else {
-        toast.error(`Signup failed: ${res.message}`);
+        toast.error(`Login failed: ${res.message}`);
       }
     }
   };
@@ -129,10 +101,10 @@ const SignupPage = () => {
           textAlign={"left"}
           fontWeight={"700"}
         >
-          Create an Account
+          Welcome back!
         </Heading>
         <Text marginBottom={"1rem"} width={"100%"}>
-          Start your fitness journey
+          Ready to do more?
         </Text>
         <Box
           marginTop={"1rem"}
@@ -147,8 +119,7 @@ const SignupPage = () => {
                 {form.label}
                 <Field.RequiredIndicator color={"red.500"} />
               </Field.Label>
-              {(form.name === "password" ||
-                form.name === "confirmPassword") && (
+              {form.name === "password" && (
                 <PasswordInput
                   name={form.name}
                   value={formValues[form.name]}
@@ -156,7 +127,7 @@ const SignupPage = () => {
                   placeholder={form.placeholder}
                 />
               )}
-              {form.name !== "password" && form.name !== "confirmPassword" && (
+              {form.name !== "password" && (
                 <Input
                   name={form.name}
                   placeholder={form.placeholder}
@@ -171,7 +142,7 @@ const SignupPage = () => {
           ))}
         </Box>
         <Button
-          onClick={handleSignup}
+          onClick={handleLogin}
           width={"100%"}
           marginTop={"2rem"}
           backgroundColor={"var(--primary-color)"}
@@ -179,16 +150,20 @@ const SignupPage = () => {
           border={"none"}
           borderRadius={"0.5rem"}
         >
-          Signup
+          Login
         </Button>
         <Text
           color={"rgba(0, 0, 0, 0.5)"}
           fontSize={"0.9rem"}
           marginTop={"0.5rem"}
         >
-          Already have an account?{" "}
-          <Link href="/login" color={"var(--primary-color)"} fontWeight={"600"}>
-            Login
+          Don't have an account?{" "}
+          <Link
+            href="/signup"
+            color={"var(--primary-color)"}
+            fontWeight={"600"}
+          >
+            Signup
           </Link>
         </Text>
       </Flex>
@@ -196,4 +171,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;
