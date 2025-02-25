@@ -10,8 +10,10 @@ import {
   Text,
   Button,
   Image,
+  Heading,
+  Box,
+  Link,
 } from "@chakra-ui/react";
-import "../styles/SignupPage.scss";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -92,17 +94,53 @@ const SignupPage = () => {
   };
 
   return (
-    <Container className="login-container">
-      <Flex direction="column" align="center" className="login-form">
-        <Image src="/setlifyLogo.png" />
-        <h1>Create an Account</h1>
-        <Text css={{ marginBottom: "1rem" }}>Start your fitness journey</Text>
-        <div className="login-fields">
+    <Container
+      display={"flex"}
+      flexDirection={"column"}
+      alignItems="center"
+      justifyContent={"center"}
+    >
+      <Flex
+        direction="column"
+        align="center"
+        borderRadius={"1.5rem"}
+        padding={"2rem 0 2rem 0"}
+        width={"80vw"}
+      >
+        <Image
+          src="/setlifyLogo.png"
+          align={"left"}
+          width={"100%"}
+          height={"8vh"}
+          marginLeft={"0"}
+          marginBottom={"1rem"}
+          objectFit={"contain"}
+          display={"block"}
+        />
+        <Heading
+          as={"h1"}
+          width={"100%"}
+          fontSize={"1.65rem"}
+          textAlign={"left"}
+          fontWeight={"700"}
+        >
+          Create an Account
+        </Heading>
+        <Text marginBottom={"1rem"} width={"100%"}>
+          Start your fitness journey
+        </Text>
+        <Box
+          marginTop={"1rem"}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={"1rem"}
+          width={"100%"}
+        >
           {forms.map((form) => (
             <Field.Root key={form.name} required>
-              <Field.Label>
+              <Field.Label fontWeight={"600"} color={"rgba(0, 0, 0, 0.5)"}>
                 {form.label}
-                <Field.RequiredIndicator className="indicator" />
+                <Field.RequiredIndicator color={"red.500"} />
               </Field.Label>
               <Input
                 name={form.name}
@@ -115,16 +153,28 @@ const SignupPage = () => {
               )}
             </Field.Root>
           ))}
-        </div>
-        <Button onClick={handleSignup} className="signup-btn">
+        </Box>
+        <Button
+          onClick={handleSignup}
+          width={"100%"}
+          marginTop={"2rem"}
+          backgroundColor={"var(--primary-color)"}
+          color={"white"}
+          border={"none"}
+          borderRadius={"0.5rem"}
+        >
           Signup
         </Button>
-        <span className="login-text">
+        <Text
+          color={"rgba(0, 0, 0, 0.5)"}
+          fontSize={"0.9rem"}
+          marginTop={"0.5rem"}
+        >
           Already have an account?{" "}
-          <a className="login-btn" href="/login">
+          <Link href="/login" color={"var(--primary-color)"} fontWeight={"600"}>
             Login
-          </a>
-        </span>
+          </Link>
+        </Text>
       </Flex>
     </Container>
   );
