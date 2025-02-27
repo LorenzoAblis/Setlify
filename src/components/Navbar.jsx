@@ -1,41 +1,51 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Flex, Button, Icon } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
 import { FaClock } from "react-icons/fa";
-import { FaHome } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { FaDumbbell } from "react-icons/fa6";
+import { IoIosSettings } from "react-icons/io";
 
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const navLinks = [
     {
       label: "Profile",
-      href: "/",
-      icon: <Icon as={CgProfile} boxSize={4} mr={1} />,
+      href: "/profile",
+      icon: <Icon as={CgProfile} boxSize={4} />,
     },
     {
       label: "History",
-      href: "/",
-      icon: <Icon as={FaClock} boxSize={4} mr={1} />,
+      href: "/history",
+      icon: <Icon as={FaClock} boxSize={4} />,
     },
     {
-      label: "Workout",
+      label: "Templates",
       href: "/",
-      icon: <Icon as={FaHome} boxSize={4} mr={1} />,
+      icon: <Icon as={FaPlus} boxSize={4} />,
     },
     {
       label: "Exercises",
-      href: "/",
-      icon: <Icon as={FaDumbbell} boxSize={4} mr={1} />,
+      href: "/exercises",
+      icon: <Icon as={FaDumbbell} boxSize={4} />,
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: <Icon as={IoIosSettings} boxSize={4} />,
     },
   ];
+
   return (
     <Container
       position={"fixed"}
       bottom={0}
       left={0}
       right={0}
-      height={"7.5vh"}
-      backgroundColor={"var(--primary-color)"}
+      height={"10vh"}
+      backgroundColor={"var(--secondary-color)"}
     >
       <Flex
         direction={"row"}
@@ -48,14 +58,16 @@ const Navbar = () => {
             key={link.label}
             size={"sm"}
             variant={"ghost"}
-            color={"white"}
             fontWeight={"500"}
-            _hover={{ bg: "var(--primary-color-dark)" }}
-            paddingTop={"1vh"}
             href={link.href}
+            width={"20%"}
+            color={
+              location.pathname === link.href ? "white" : "rgba(0, 0, 0, 0.5)"
+            }
+            onClick={() => navigate(link.href)}
           >
             <Flex direction="column" alignItems="center">
-              {React.cloneElement(link.icon, { boxSize: 6, mr: 1 })}
+              {React.cloneElement(link.icon, { boxSize: 6 })}
               <span style={{ fontSize: "0.7rem" }}>{link.label}</span>
             </Flex>
           </Button>

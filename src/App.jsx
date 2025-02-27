@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import Templates from "./pages/Templates";
+import Exercises from "./pages/Exercises";
 
 function App() {
   return (
@@ -14,7 +15,15 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Templates />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercises"
+          element={
+            <ProtectedRoute>
+              <Exercises />
             </ProtectedRoute>
           }
         />

@@ -1,9 +1,9 @@
 import { useAuth } from "../contexts/authContext";
-import { Container, Heading, Box, Text } from "@chakra-ui/react";
+import { Container, Heading, Box, Text, Button } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 
-const Dashboard = () => {
-  const { signOut, user } = useAuth();
+const Templates = () => {
+  const { user } = useAuth();
   return (
     <>
       <Container>
@@ -23,6 +23,9 @@ const Dashboard = () => {
           <Heading as={"h2"} fontSize={"1.5rem"}>
             Templates
           </Heading>
+          <Button marginTop={"1rem"} backgroundColor={"var(--primary-color)"}>
+            Create Template
+          </Button>
         </Box>
       </Container>
       <Navbar />
@@ -30,4 +33,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Templates;
