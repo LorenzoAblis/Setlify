@@ -44,23 +44,23 @@ const Navbar = () => {
       bottom={0}
       left={0}
       right={0}
-      height={"10vh"}
+      height={{ base: "10vh" }}
       backgroundColor={"var(--secondary-color)"}
     >
       <Flex
-        direction={"row"}
-        justifyContent={"space-between"}
-        height={"100%"}
-        alignItems={"center"}
+        direction={{ base: "row" }}
+        justifyContent={{ base: "space-between" }}
+        height={{ base: "100%" }}
+        alignItems={{ base: "center" }}
       >
         {navLinks.map((link) => (
           <Button
             key={link.label}
-            size={"sm"}
-            variant={"ghost"}
-            fontWeight={"500"}
+            size={{ base: "sm" }}
+            variant={{ base: "ghost" }}
+            fontWeight={{ base: "500" }}
             href={link.href}
-            width={"20%"}
+            width={{ base: "20%" }}
             color={
               location.pathname === link.href ? "white" : "rgba(0, 0, 0, 0.5)"
             }

@@ -100,52 +100,55 @@ const SignupPage = () => {
 
   return (
     <Container
-      display={"flex"}
-      flexDirection={"column"}
-      alignItems="center"
-      justifyContent={"center"}
+      display={{ base: "flex" }}
+      flexDirection={{ base: "column" }}
+      alignItems={{ base: "center" }}
+      justifyContent={{ base: "center" }}
     >
       <Flex
-        direction="column"
-        align="center"
-        borderRadius={"1.5rem"}
-        padding={"2rem 0 2rem 0"}
-        width={"80vw"}
+        direction={{ base: "column" }}
+        align={{ base: "center" }}
+        borderRadius={{ base: "1.5rem" }}
+        padding={{ base: "2rem 0 2rem 0" }}
+        width={{ base: "80vw" }}
       >
         <Image
           src="/setlifyLogo.png"
-          align={"left"}
-          width={"100%"}
-          height={"8vh"}
-          marginLeft={"0"}
-          marginBottom={"1rem"}
-          objectFit={"contain"}
-          display={"block"}
+          align={{ base: "left" }}
+          width={{ base: "100%" }}
+          height={{ base: "8vh" }}
+          marginLeft={{ base: "0" }}
+          marginBottom={{ base: "1rem" }}
+          objectFit={{ base: "contain" }}
+          display={{ base: "block" }}
         />
         <Heading
           as={"h1"}
-          width={"100%"}
-          fontSize={"1.65rem"}
-          textAlign={"left"}
-          fontWeight={"700"}
+          width={{ base: "100%" }}
+          fontSize={{ base: "1.65rem" }}
+          textAlign={{ base: "left" }}
+          fontWeight={{ base: "700" }}
         >
           Create an Account
         </Heading>
-        <Text marginBottom={"1rem"} width={"100%"}>
+        <Text marginBottom={{ base: "1rem" }} width={{ base: "100%" }}>
           Start your fitness journey
         </Text>
         <Box
-          marginTop={"1rem"}
-          display={"flex"}
-          flexDirection={"column"}
-          gap={"1rem"}
-          width={"100%"}
+          marginTop={{ base: "1rem" }}
+          display={{ base: "flex" }}
+          flexDirection={{ base: "column" }}
+          gap={{ base: "1rem" }}
+          width={{ base: "100%" }}
         >
           {forms.map((form) => (
             <Field.Root key={form.name} required>
-              <Field.Label fontWeight={"600"} color={"rgba(0, 0, 0, 0.5)"}>
+              <Field.Label
+                fontWeight={{ base: "600" }}
+                color={{ base: "rgba(0, 0, 0, 0.5)" }}
+              >
                 {form.label}
-                <Field.RequiredIndicator color={"red.500"} />
+                <Field.RequiredIndicator color={{ base: "red.500" }} />
               </Field.Label>
               {(form.name === "password" ||
                 form.name === "confirmPassword") && (
@@ -165,29 +168,33 @@ const SignupPage = () => {
                 />
               )}
               {errors[form.name] && (
-                <Text color="red.500">{errors[form.name]}</Text>
+                <Text color={{ base: "red.500" }}>{errors[form.name]}</Text>
               )}
             </Field.Root>
           ))}
         </Box>
         <Button
           onClick={handleSignup}
-          width={"100%"}
-          marginTop={"2rem"}
-          backgroundColor={"var(--primary-color)"}
-          color={"white"}
-          border={"none"}
-          borderRadius={"0.5rem"}
+          width={{ base: "100%" }}
+          marginTop={{ base: "2rem" }}
+          backgroundColor={{ base: "var(--primary-color)" }}
+          color={{ base: "white" }}
+          border={{ base: "none" }}
+          borderRadius={{ base: "0.5rem" }}
         >
           Signup
         </Button>
         <Text
-          color={"rgba(0, 0, 0, 0.5)"}
-          fontSize={"0.9rem"}
-          marginTop={"0.5rem"}
+          color={{ base: "rgba(0, 0, 0, 0.5)" }}
+          fontSize={{ base: "0.9rem" }}
+          marginTop={{ base: "0.5rem" }}
         >
           Already have an account?{" "}
-          <Link href="/login" color={"var(--primary-color)"} fontWeight={"600"}>
+          <Link
+            href="/login"
+            color={{ base: "var(--primary-color)" }}
+            fontWeight={{ base: "600" }}
+          >
             Login
           </Link>
         </Text>

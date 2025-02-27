@@ -9,21 +9,24 @@ const Templates = () => {
       <Container>
         <Heading
           as={"h1"}
-          fontSize={"2rem"}
-          fontWeight={"700"}
-          marginTop={"7vh"}
+          fontSize={{ base: "2rem" }}
+          fontWeight={{ base: "700" }}
+          marginTop={{ base: "7vh" }}
         >
           Welcome,{" "}
-          <Text as={"span"} color={"var(--secondary-color)"}>
+          <Text as={"span"} color={{ base: "var(--secondary-color)" }}>
             {" "}
             {user.user_metadata.display_name}!
           </Text>
         </Heading>
-        <Box marginTop={"3vh"}>
-          <Heading as={"h2"} fontSize={"1.5rem"}>
+        <Box marginTop={{ base: "3vh" }}>
+          <Heading as={"h2"} fontSize={{ base: "1.5rem" }}>
             Templates
           </Heading>
-          <Button marginTop={"1rem"} backgroundColor={"var(--primary-color)"}>
+          <Button
+            marginTop={{ base: "1rem" }}
+            backgroundColor={{ base: "var(--primary-color)" }}
+          >
             Create Template
           </Button>
         </Box>
