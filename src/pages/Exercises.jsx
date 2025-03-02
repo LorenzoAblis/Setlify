@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAuth } from "../contexts/authContext";
-import { addItem } from "../controllers/itemData";
+import { addItem, fetchItems } from "../controllers/itemData";
+
+import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import {
   Container,
@@ -11,7 +13,6 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import {
-  DialogActionTrigger,
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
@@ -28,17 +29,29 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "../components/ui/select";
+import { InputGroup } from "../components/ui/input-group";
 import { Field } from "../components/ui/field";
+import { IoSearch } from "react-icons/io5";
 
 const Exercises = () => {
   const contentRef = useRef(null);
   const { user } = useAuth();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [userExercises, setUserExercises] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [exercise, setExercise] = useState({
-    name: null,
-    muscleGroup: null,
-    category: null,
+    name: "",
+    muscle_group: "",
+    category: "",
   });
-  const muscleGroups = createListCollection({
+  const [validations, setValidations] = useState({
+    name: true,
+    category: true,
+    muscle_group: true,
+  });
+
+  const muscle_groups = createListCollection({
     items: [
       { label: "Arms", value: "Arms" },
       { label: "Chest", value: "Chest" },
@@ -46,10 +59,34 @@ const Exercises = () => {
       { label: "Back", value: "Back" },
       { label: "Shoulders", value: "Shoulders" },
       { label: "Core", value: "Core" },
-      { label: "Cardio", value: "Cardio" },
       { label: "Full Body", value: "Full Body" },
     ],
   });
+  const categories = createListCollection({
+    items: [
+      { label: "Barbell", value: "Barbell" },
+      { label: "Dumbbell", value: "Dumbbell" },
+      { label: "Weighted Bodyweight", value: "Weighted Bodyweight" },
+      { label: "Assisted Bodyweight", value: "Assisted Bodyweight" },
+      { label: "Machine", value: "Machine" },
+      { label: "Time", value: "Time" },
+      { label: "Cardio", value: "Cardio" },
+    ],
+  });
+
+  const fetchExercises = async () => {
+    try {
+      const res = await fetchItems(user.id, "exercises");
+      if (res.success) {
+        setUserExercises(res.data);
+        console.log(categories);
+      } else {
+        toast.error(`Failed to fetch exercises: ${res.message}`);
+      }
+    } catch (error) {
+      toast.error(`Failed to fetch exercises: ${error.message}`);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,14 +105,61 @@ const Exercises = () => {
   };
 
   const addExercise = async () => {
-    // try {
-    //   await addItem(user.id, exercise);
-    // } catch (error) {
-    //   console.error(error);
-    //   alert("Failed to add exercise. Please try again.");
-    // }
-    console.log(exercise);
+    const isValid = {
+      name: exercise.name !== "",
+      category: exercise.category !== "",
+      muscle_group: exercise.muscle_group !== "",
+    };
+
+    setValidations(isValid);
+
+    if (Object.values(isValid).includes(false)) {
+      return;
+    }
+
+    try {
+      const res = await addItem(user.id, exercise, "exercises");
+      if (res.success) {
+        setExercise({
+          name: "",
+          muscle_group: "",
+          category: "",
+        });
+        setIsDialogOpen(false);
+        fetchExercises();
+        toast.success("Exercise added successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add exercise. Please try again.");
+    }
   };
+
+  const filteredExercises = userExercises.filter((exercise) =>
+    exercise.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (contentRef.current && !contentRef.current.contains(event.target)) {
+        setIsDialogOpen(false);
+      }
+    };
+
+    if (isDialogOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDialogOpen]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchExercises();
+    }
+  }, [user?.id]);
 
   return (
     <>
@@ -91,15 +175,21 @@ const Exercises = () => {
             Exercises
           </Text>
         </Heading>
-        <Input
-          placeholder="Search"
+        <InputGroup
+          startElement={<IoSearch />}
           marginTop={{ base: "1rem" }}
-          fontSize={{ base: "1rem" }}
-          borderRadius={{ base: "0.75rem" }}
-          border="1.5px solid #E5E5E5"
-          fontWeight={500}
-        />
-        <DialogRoot>
+          width={{ base: "100%" }}
+        >
+          <Input
+            placeholder="Search"
+            fontWeight={500}
+            borderRadius={{ base: "1rem" }}
+            fontSize={{ base: "1rem" }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </InputGroup>
+        <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
               marginTop={{ base: "1rem" }}
@@ -107,9 +197,9 @@ const Exercises = () => {
               backgroundColor={{ base: "var(--primary-color)" }}
               onClick={() =>
                 setExercise({
-                  name: undefined,
-                  muscleGroup: undefined,
-                  category: undefined,
+                  name: "",
+                  muscle_group: "",
+                  category: "",
                 })
               }
             >
@@ -131,10 +221,7 @@ const Exercises = () => {
               flexDirection={{ base: "column" }}
               gap={4}
             >
-              <Field
-                invalid={exercise.name === "" && exercise.name !== undefined}
-                errorText="Name is required"
-              >
+              <Field invalid={!validations.name} errorText="Name is required">
                 <Input
                   placeholder="Name"
                   fontWeight={{ base: "600" }}
@@ -144,17 +231,14 @@ const Exercises = () => {
                 />
               </Field>
               <Field
-                invalid={
-                  exercise.muscleGroup === "" &&
-                  exercise.muscleGroup !== undefined
-                }
+                invalid={!validations.muscle_group}
                 errorText="Muscle Group is required"
               >
                 <SelectRoot
-                  collection={muscleGroups}
+                  collection={muscle_groups}
                   size="md"
                   onValueChange={(value) =>
-                    handleSelectChange(value, "muscleGroup")
+                    handleSelectChange(value, "muscle_group")
                   }
                 >
                   <SelectTrigger>
@@ -164,7 +248,7 @@ const Exercises = () => {
                     />
                   </SelectTrigger>
                   <SelectContent portalRef={contentRef}>
-                    {muscleGroups.items.map((item) => (
+                    {muscle_groups.items.map((item) => (
                       <SelectItem item={item} key={item.value}>
                         {item.label}
                       </SelectItem>
@@ -173,13 +257,11 @@ const Exercises = () => {
                 </SelectRoot>
               </Field>
               <Field
-                invalid={
-                  exercise.category === "" && exercise.category !== undefined
-                }
+                invalid={!validations.category}
                 errorText="Category is required"
               >
                 <SelectRoot
-                  collection={muscleGroups}
+                  collection={categories}
                   size="md"
                   onValueChange={(value) =>
                     handleSelectChange(value, "category")
@@ -192,7 +274,7 @@ const Exercises = () => {
                     />
                   </SelectTrigger>
                   <SelectContent portalRef={contentRef}>
-                    {muscleGroups.items.map((item) => (
+                    {categories.items.map((item) => (
                       <SelectItem item={item} key={item.value}>
                         {item.label}
                       </SelectItem>
@@ -202,17 +284,36 @@ const Exercises = () => {
               </Field>
             </DialogBody>
             <DialogFooter>
-              <DialogActionTrigger asChild>
-                <Button
-                  backgroundColor={"var(--primary-color)"}
-                  onClick={addExercise}
-                >
-                  Save
-                </Button>
-              </DialogActionTrigger>
+              <Button
+                backgroundColor={"var(--primary-color)"}
+                onClick={addExercise}
+              >
+                Save
+              </Button>
             </DialogFooter>
           </DialogContent>
         </DialogRoot>
+        {filteredExercises
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((exercise) => (
+            <Button
+              key={exercise.id}
+              variant={"outline"}
+              width={{ base: "100%" }}
+              padding={{ base: "1.5rem" }}
+              borderRadius={{ base: "0.75rem" }}
+              display={"flex"}
+              justifyContent={"space-between"}
+              marginTop={{ base: "1rem" }}
+            >
+              <Text fontWeight={"600"} fontSize={"1rem"}>
+                {exercise.name}
+              </Text>
+              <Text color={"var(--secondary-color)"}>
+                {exercise.muscle_group}
+              </Text>
+            </Button>
+          ))}
       </Container>
       <Navbar />
     </>

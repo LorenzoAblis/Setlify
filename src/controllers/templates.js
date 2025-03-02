@@ -62,17 +62,15 @@ export const addTemplateExercises = async (newTemplate) => {
       weight,
     } = newTemplate;
 
-    const { error } = await supabase
-      .from("template_exercises")
-      .insert({
-        template_id,
-        exercise_id,
-        sets,
-        reps,
-        order_index,
-        rest_time,
-        weight,
-      });
+    const { error } = await supabase.from("template_exercises").insert({
+      template_id,
+      exercise_id,
+      sets,
+      reps,
+      order_index,
+      rest_time,
+      weight,
+    });
 
     if (error) {
       console.error("Error adding exercise to template:", error.message);
@@ -86,6 +84,34 @@ export const addTemplateExercises = async (newTemplate) => {
     };
   } catch (error) {
     console.error("Error adding exercise to template:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const addTemplateExerciseSets = async (newSet) => {
+  try {
+    const { template_id, exercise_id, set_index, reps, weight } = newSet;
+
+    const { error } = await supabase.from("template_exercise_sets").insert({
+      template_id,
+      exercise_id,
+      set_index,
+      reps,
+      weight,
+    });
+
+    if (error) {
+      console.error("Error adding set to template:", error.message);
+      return { success: false, message: error.message };
+    }
+
+    console.log("Set added to template successfully!");
+    return {
+      success: true,
+      message: "Set added to template successfully.",
+    };
+  } catch (error) {
+    console.error("Error adding Set to template:", error.message);
     return { success: false, message: error.message };
   }
 };

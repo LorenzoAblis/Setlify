@@ -12,8 +12,7 @@ export const fetchItems = async (user_id, tableName) => {
       return { success: false, message: error.message };
     }
 
-    console.log(data);
-    return data;
+    return { success: true, message: "Data fetched successfully", data };
   } catch (error) {
     console.error(
       `Unexpected error fetching from ${tableName}:`,
