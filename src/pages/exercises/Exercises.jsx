@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import { useAuth } from "../contexts/authContext";
-import { addItem, fetchItems } from "../controllers/itemData";
+import { useAuth } from "../../contexts/authContext";
+import { addItem, fetchItems } from "../../controllers/itemData";
 
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import {
   Container,
   Heading,
@@ -21,16 +21,16 @@ import {
   DialogRoot,
   DialogTitle,
   DialogTrigger,
-} from "../components/ui/dialog";
+} from "../../components/ui/dialog";
 import {
   SelectContent,
   SelectItem,
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "../components/ui/select";
-import { InputGroup } from "../components/ui/input-group";
-import { Field } from "../components/ui/field";
+} from "../../components/ui/select";
+import { InputGroup } from "../../components/ui/input-group";
+import { Field } from "../../components/ui/field";
 import { IoSearch } from "react-icons/io5";
 
 const Exercises = () => {

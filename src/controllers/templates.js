@@ -43,7 +43,11 @@ export const fetchTemplatesWithExercises = async (user_id) => {
     }));
 
     console.log(templatesWithExercises);
-    return templatesWithExercises;
+    return {
+      success: true,
+      message: "Sucessfully fetched exercises!",
+      data: templatesWithExercises,
+    };
   } catch (error) {
     console.error("Error fetching templates with exercises:", error);
     return { success: false, message: error.message };
